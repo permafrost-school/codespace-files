@@ -1,0 +1,34 @@
+[core]
+    editor = nano
+
+[color]
+    ui = auto
+    status = auto
+
+[alias]
+    a = add
+    ci = commit
+    co = checkout
+    st = status
+    sc = diff
+    d = diff
+    desc = describe
+    de = "!f() { git diff $@ | delta -s --keep-plus-minus-markers; }; f"
+    push-with-tags = "!f() { git push && git push --tags; }; f"
+    cob = "!f() { git co -b $@; }; f"
+    wip = "!f() { git commit -m'wip'; }; f"
+    coml = "!f() { git co mainline; }; f"
+    clcd = "!f() { git clone $1; cd $1; }; f"
+    lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+    pcb = "!f() { git push origin $(git symbolic-ref --short HEAD); }; f"
+    rmb = "!f() { git branch -D $1; }; f"
+    lastbr = "!f() { git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"%s\\n\", $1)}' | grep -v $(git branch --show-current) | head -n 1; }; f"
+    co-last = "!f() { git co $(git lastbr); }; f"
+    rm-last = "!f() { git branch -D $(git lastbr); }; f"
+    
+[delta]
+    side-by-side = true
+    keep-plus-minus-markers = true
+
+[init]
+defaultBranch = main
